@@ -1,0 +1,167 @@
+name: Tests
+
+on:
+  push:
+    branches: [main, master, feature/diploma]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+    inputs:
+      tests:
+        description: 'Which tests to run'
+        type: choice
+        default: 'all'
+        options:
+          - all
+          - ui
+          - api
+          - mobile
+          - smoke
+      base_url:
+        description: 'Override base URL (optional)'
+        type: string
+        default: ''
+
+permissions:
+  contents: write   # нужно для деплоя в gh-pages
+
+concurrency:
+  group: tests-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  test:
+    name: Playwright (${{ inputs.tests || 'all' }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Setup Java (для allure-commandline)
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Install dependencies
+        run: npm ci || npm install
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      # gh-pages уже хранит историю прошлых прогонов — забираем последнюю
+      # папку history, чтобы новый отчёт показывал тренды и retries.
+      - name: Restore Allure history
+        if: always()
+        continue-on-error: true
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+          path: gh-pages
+
+      - name: Copy previous Allure history into results
+        if: always()
+        continue-on-error: true
+        run: |
+          mkdir -p allure-results
+          if [ -d gh-pages/history ]; then
+            cp -r gh-pages/history allure-results/history
+          fi
+
+      - name: Run tests
+        env:
+          CI: 'true'
+          BASE_URL: ${{ inputs.base_url || 'https://demowebshop.tricentis.com' }}
+        run: |
+          case "${{ inputs.tests || 'all' }}" in
+            ui)     npm run test:ui ;;
+            api)    npm run test:api ;;
+            mobile) npm run test:mobile ;;
+            smoke)  npm run test:smoke ;;
+            *)      npm test ;;
+          esac
+
+      - name: Upload results to Allure TestOps
+        if: always() && env.ALLURE_TOKEN != ''
+        env:
+          ALLURE_TOKEN: ${{ secrets.ALLURE_TOKEN }}
+          ALLURE_PROJECT_ID: ${{ secrets.ALLURE_PROJECT_ID }}
+          ALLURE_ENDPOINT: ${{ secrets.ALLURE_ENDPOINT }}
+          ALLURE_LAUNCH_NAME: "diploma · ${{ inputs.tests || 'all' }} · #${{ github.run_number }}"
+          ALLURE_LAUNCH_TAGS: "branch:${{ github.ref_name }},sha:${{ github.sha }}"
+        continue-on-error: true
+        run: |
+          curl -sSL https://github.com/allure-framework/allurectl/releases/latest/download/allurectl_linux_amd64 -o /tmp/allurectl
+          chmod +x /tmp/allurectl
+          /tmp/allurectl upload \
+            --endpoint   "$ALLURE_ENDPOINT" \
+            --token      "$ALLURE_TOKEN" \
+            --project-id "$ALLURE_PROJECT_ID" \
+            --launch-name "$ALLURE_LAUNCH_NAME" \
+            --launch-tags "$ALLURE_LAUNCH_TAGS" \
+            allure-results || echo "TestOps upload skipped"
+
+      - name: Generate Allure report
+        if: always()
+        run: |
+          npx allure-commandline generate allure-results --clean -o allure-report
+
+      - name: Upload Allure raw results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results
+          path: allure-results
+          retention-days: 7
+
+      - name: Upload Allure report (html)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-report
+          path: allure-report
+          retention-days: 14
+
+      - name: Upload Playwright HTML report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report
+          retention-days: 7
+
+      - name: Deploy Allure report to GitHub Pages
+        if: always() && github.ref == 'refs/heads/feature/diploma'
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: allure-report
+          keep_files: false
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
+          commit_message: 'docs(allure): update report ${{ github.sha }}'
+
+      - name: Notify Telegram
+        if: always()
+        uses: appleboy/telegram-action@master
+        continue-on-error: true
+        with:
+          to: ${{ secrets.TG_CHAT_ID }}
+          token: ${{ secrets.TG_BOT_TOKEN }}
+          format: html
+          message: |
+            <b>${{ job.status == 'success' && '✅' || '❌' }} Demo Web Shop tests — ${{ job.status }}</b>
+            Suite: <code>${{ inputs.tests || 'all' }}</code>
+            Branch: <code>${{ github.ref_name }}</code>
+            Commit: <a href="${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}"><code>${{ github.sha }}</code></a> by ${{ github.actor }}
+
+            <a href="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}">Run logs</a>
+            <a href="https://leibaliu.github.io/diploma/">Allure report</a>

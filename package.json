@@ -1,0 +1,30 @@
+{
+  "name": "diploma",
+  "version": "1.0.0",
+  "description": "QA.GURU diploma project — UI + API + Mobile autotests for demowebshop.tricentis.com",
+  "type": "module",
+  "scripts": {
+    "test": "npx playwright test",
+    "test:ui": "npx playwright test tests/ui",
+    "test:api": "npx playwright test tests/api",
+    "test:mobile": "npx playwright test --project='Mobile Chrome'",
+    "test:smoke": "npx playwright test --grep @SMOKE",
+    "test:get": "npx playwright test --grep @GET",
+    "test:post": "npx playwright test --grep @POST",
+    "test:auth": "npx playwright test --grep @AUTH",
+    "test:cart": "npx playwright test --grep @CART",
+    "test:headed": "npx playwright test --headed",
+    "test:debug": "npx playwright test --ui",
+    "allure:generate": "allure generate allure-results -o allure-report --clean",
+    "allure:open": "allure open allure-report",
+    "allure:serve": "allure serve allure-results"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^10.4.0",
+    "@playwright/test": "^1.58.2",
+    "@types/node": "^25.3.0",
+    "allure-commandline": "^2.34.0",
+    "allure-playwright": "^3.5.1",
+    "dotenv": "^17.4.1"
+  }
+}

@@ -1,0 +1,22 @@
+# Env
+.env
+auth.json
+storageState.json
+
+# Playwright
+node_modules/
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+
+# Allure
+/allure-results/
+/allure-report/
+/.allurectl/
+allurectl
+
+# OS / IDE
+.DS_Store
+.idea/
+.vscode/

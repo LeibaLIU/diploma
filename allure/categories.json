@@ -1,0 +1,26 @@
+[
+  {
+    "name": "Product defects",
+    "matchedStatuses": ["failed"],
+    "messageRegex": ".*expect.*"
+  },
+  {
+    "name": "Test defects",
+    "matchedStatuses": ["broken"]
+  },
+  {
+    "name": "Outdated tests",
+    "matchedStatuses": ["broken"],
+    "traceRegex": ".*FixtureLoadError.*"
+  },
+  {
+    "name": "Infrastructure / network issues",
+    "matchedStatuses": ["broken", "failed"],
+    "messageRegex": ".*(ERR_TIMED_OUT|ECONNREFUSED|ECONNRESET|ETIMEDOUT|ENOTFOUND|net::|Anti-forgery token not found).*"
+  },
+  {
+    "name": "Flaky / timeout",
+    "matchedStatuses": ["broken", "failed"],
+    "messageRegex": ".*Timeout.*exceeded.*"
+  }
+]
