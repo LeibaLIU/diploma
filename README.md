@@ -2,8 +2,21 @@
 
 Дипломный проект по автоматизации тестирования сайта **[demowebshop.tricentis.com](https://demowebshop.tricentis.com/)**.
 
-[![tests](https://github.com/LeibaLIU/diploma/actions/workflows/tests.yml/badge.svg)](https://github.com/LeibaLIU/diploma/actions/workflows/tests.yml)
-[![Allure Report](https://img.shields.io/badge/Allure-Report-orange)](https://leibaliu.github.io/diploma/)
+[![tests](https://github.com/LeibaLIU/diploma/actions/workflows/tests.yml/badge.svg?branch=feature/diploma)](https://github.com/LeibaLIU/diploma/actions/workflows/tests.yml)
+[![Allure Report](https://img.shields.io/badge/Allure-Report-orange?logo=qameta&logoColor=white)](https://leibaliu.github.io/diploma/)
+[![Allure TestOps](https://img.shields.io/badge/Allure-TestOps-blueviolet?logo=qameta&logoColor=white)](https://allure.autotests.cloud/project/5182)
+[![Telegram](https://img.shields.io/badge/Telegram-notifications-2CA5E0?logo=telegram&logoColor=white)](#telegram-уведомления)
+[![Playwright](https://img.shields.io/badge/Playwright-1.56-2EAD33?logo=playwright&logoColor=white)](https://playwright.dev/)
+
+## 🔗 Полезные ссылки
+
+| Ресурс | URL |
+|--------|-----|
+| 🟢 GitHub Actions | https://github.com/LeibaLIU/diploma/actions |
+| 📊 Allure-отчёт (GitHub Pages) | https://leibaliu.github.io/diploma/ |
+| 🟣 Allure TestOps проект | https://allure.autotests.cloud/project/5182 |
+| 📦 Репозиторий | https://github.com/LeibaLIU/diploma |
+| 🌐 Сайт под тестами | https://demowebshop.tricentis.com/ |
 
 ## Содержание
 
@@ -33,23 +46,26 @@
 
 ## Что покрывается
 
-### UI (`tests/ui/`) — 5 функциональных тестов
-1. Регистрация нового пользователя со случайными данными (`@SMOKE`)
-2. Логин зарегистрированным пользователем + негативный кейс с неверным паролем (`@SMOKE`)
-3. Поиск товара по ключевому слову (`@SMOKE`)
-4. Добавление товара в корзину (`@SMOKE`)
-5. Подписка на email-рассылку
+> Всего **13 автотестов**: 6 UI · 6 API · 1 Mobile. В CI исполняются за ~30 секунд.
 
-### API (`tests/api/`) — 6 функциональных тестов
-1. `POST /register` — регистрация со случайным email (`@SMOKE`)
-2. `POST /login` — авторизация и проверка cookie сессии (`@SMOKE`)
-3. `GET /search?q=…` — поиск товаров
+### UI (`tests/ui/`) — 6 тестов
+1. Регистрация нового пользователя со случайными данными (`@SMOKE`)
+2. Логин зарегистрированным пользователем (`@SMOKE`)
+3. Негативный логин — ошибка при неверных учётных данных
+4. Поиск товара по ключевому слову через хедер
+5. Добавление товара в корзину и проверка содержимого (`@SMOKE`)
+6. Подписка на email-рассылку случайным адресом
+
+### API (`tests/api/`) — 6 тестов
+1. `POST /register` — регистрация со случайным email и проверка auth-cookie (`@SMOKE`)
+2. `POST /login` — авторизация ранее зарегистрированным пользователем (`@SMOKE`)
+3. `GET /search?q=…` — поиск возвращает хотя бы один товар
 4. `POST /addproducttocart/catalog/{id}/1/{qty}` — добавление в корзину (`@SMOKE`)
 5. `POST /subscribenewsletter` — успешная подписка (`@SMOKE`)
 6. `POST /subscribenewsletter` — негативный кейс с некорректным email
 
-### Mobile (`tests/mobile/`)
-Smoke-сценарий поиска в проекте `Mobile Chrome` (эмуляция Pixel 5) — переиспользует Page Object'ы desktop-уровня.
+### Mobile (`tests/mobile/`) — 1 тест
+Smoke-сценарий поиска в проекте `Mobile Chrome` (эмуляция Pixel 5) — переиспользует Page Object'ы desktop-уровня, проверяет адаптивную вёрстку и viewport.
 
 ## Структура проекта
 
@@ -65,9 +81,9 @@ diploma/
 │       ├── fixtures/         # ui/api fixtures
 │       └── data/
 └── tests/
-    ├── ui/                   # 5 UI-тестов
-    ├── api/                  # 5 API-тестов
-    └── mobile/               # Mobile-тесты
+    ├── ui/                   # 6 UI-тестов
+    ├── api/                  # 6 API-тестов
+    └── mobile/               # 1 Mobile-тест
 ```
 
 ## Локальный запуск
@@ -129,11 +145,13 @@ npm run allure:serve
 
 ## Allure TestOps
 
-Результаты загружаются в проект `demowebshop-diploma` на https://allure.autotests.cloud через `allurectl`.
+Результаты загружаются в проект **LeibaLIU diploma** (ID `5182`) на https://allure.autotests.cloud через `allurectl`. После каждого билда автоматически создаётся новый Launch с тегами `branch:<имя>` и `sha:<коммит>`.
+
+🔗 **Проект:** https://allure.autotests.cloud/project/5182
 
 Секреты GitHub Actions:
-- `ALLURE_TOKEN` — Personal API Token
-- `ALLURE_PROJECT_ID` — ID проекта в TestOps
+- `ALLURE_TOKEN` — Personal API Token из профиля TestOps
+- `ALLURE_PROJECT_ID` — `5182`
 - `ALLURE_ENDPOINT` — `https://allure.autotests.cloud`
 
 ## Telegram-уведомления
