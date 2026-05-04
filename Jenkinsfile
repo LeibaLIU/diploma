@@ -1,5 +1,5 @@
 pipeline {
-    agent { label 'jdk21-jenkins-agent' }
+    agent any
 
     parameters {
         choice(
