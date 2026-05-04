@@ -13,6 +13,7 @@
 | Ресурс | URL |
 |--------|-----|
 | 🟢 GitHub Actions | https://github.com/LeibaLIU/diploma/actions |
+| 🔵 Jenkins | https://jenkins.autotests.cloud/job/C06-Leibaliu-diploma/ |
 | 📊 Allure-отчёт (GitHub Pages) | https://leibaliu.github.io/diploma/ |
 | 🟣 Allure TestOps проект | https://allure.autotests.cloud/project/5182 |
 | 📦 Репозиторий | https://github.com/LeibaLIU/diploma |
