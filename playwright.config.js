@@ -39,7 +39,7 @@ export default defineConfig({
     actionTimeout: 20_000,
     navigationTimeout: 60_000,
     launchOptions: {
-      // demowebshop.tricentis.com отдаёт ответы по HTTP/2 нестабильно для headless Chromium —
+      // demowebshop.tricentis.com отдаёт ответы по HTTP/2 нестабильно для headless Chromium -
       // принудительно используем HTTP/1.1, чтобы избежать ERR_TIMED_OUT.
       args: ['--disable-http2'],
     },

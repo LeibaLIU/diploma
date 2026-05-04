@@ -1,6 +1,6 @@
 // @ts-check
 /**
- * CartService — операции добавления товара в корзину demowebshop.
+ * CartService - операции добавления товара в корзину demowebshop.
  *
  * Эндпоинт `/addproducttocart/catalog/{productId}/{shoppingCartTypeId}/{quantity}`
  * возвращает JSON `{ success: bool, message: string, updatetopcartsectionhtml: string }`.
@@ -18,7 +18,7 @@ export class CartService {
   /**
    * Добавить товар в корзину.
    *
-   * @param {number} productId Идентификатор продукта (например, 31 — 14.1-inch Laptop).
+   * @param {number} productId Идентификатор продукта (например, 31 - 14.1-inch Laptop).
    * @param {number} [quantity=1]
    */
   async addToCart(productId, quantity = 1) {

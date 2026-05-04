@@ -9,7 +9,7 @@ import { CartPage } from '../../pages/cart.page.js';
 
 /**
  * UI test fixture. Each Page Object is instantiated per test and made
- * available as a named parameter — keeps specs declarative and free of
+ * available as a named parameter - keeps specs declarative and free of
  * `new HomePage(page)` boilerplate.
  *
  * @example

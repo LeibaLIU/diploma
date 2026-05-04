@@ -1,13 +1,13 @@
 // @ts-check
 /**
- * ApiService — низкоуровневая обёртка над Playwright APIRequestContext.
+ * ApiService - низкоуровневая обёртка над Playwright APIRequestContext.
  * Предоставляет:
  *   - единый baseURL и куки между запросами;
  *   - извлечение `__RequestVerificationToken` из любой формы NopCommerce;
  *   - короткие хелперы get/post/postForm с автоматическим Allure-attachment ответа.
  *
  * Все остальные сервисы (auth/cart/search/...) принимают экземпляр ApiService
- * и работают только через него — это упрощает мок и переиспользование.
+ * и работают только через него - это упрощает мок и переиспользование.
  */
 import { allure } from 'allure-playwright';
 

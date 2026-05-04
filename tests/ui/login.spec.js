@@ -18,7 +18,7 @@ test.describe('UI · Login @UI @AUTH', () => {
 
     const user = newUser();
 
-    // Arrange — register a fresh user via UI.
+    // Arrange - register a fresh user via UI.
     await registerPage.open();
     await registerPage.register(user);
     await registerPage.expectRegistrationCompleted();
@@ -26,18 +26,18 @@ test.describe('UI · Login @UI @AUTH', () => {
     // Logout link is on the home page once registration finishes.
     await homePage.logoutLink.click();
 
-    // Act — log in.
+    // Act - log in.
     await loginPage.open();
     await loginPage.login(user.email, user.password);
 
-    // Assert — header now shows the email and a Logout link.
+    // Assert - header now shows the email and a Logout link.
     await loginPage.expectLoggedInAs(user.email);
   });
 
   test('Shows error for invalid credentials', async ({ loginPage }) => {
     await allure.epic('Demo Web Shop');
     await allure.feature('Authentication');
-    await allure.story('Login — negative');
+    await allure.story('Login - negative');
     await allure.severity('normal');
     await allure.owner('QA.GURU diploma');
 

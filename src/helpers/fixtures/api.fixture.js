@@ -1,9 +1,9 @@
 // @ts-check
 /**
- * apiTest — расширение Playwright `test`, которое:
+ * apiTest - расширение Playwright `test`, которое:
  *   1. Создаёт `request` с baseURL и cookie storage (включён по умолчанию).
  *   2. Поднимает все доменные сервисы (auth, search, cart, newsletter).
- *   3. Передаёт их в тест как фикстуры — тесту не нужно знать о ApiService.
+ *   3. Передаёт их в тест как фикстуры - тесту не нужно знать о ApiService.
  *
  * Все запросы идут через один APIRequestContext, значит cookie auth
  * автоматически сохраняются между шагами одного теста.

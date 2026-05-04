@@ -1,6 +1,6 @@
 // @ts-check
 /**
- * SearchService — обёртка над поиском demowebshop.
+ * SearchService - обёртка над поиском demowebshop.
  *
  * Эндпоинт `/search?q=...` возвращает HTML, поэтому проверяем по шаблону
  * `product-item`. Это самый стабильный признак, что в выдаче что-то есть.

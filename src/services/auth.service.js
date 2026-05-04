@@ -1,10 +1,10 @@
 // @ts-check
 /**
- * AuthService — фасад над эндпоинтами авторизации demowebshop.
+ * AuthService - фасад над эндпоинтами авторизации demowebshop.
  *
  * Сервер использует cookie-аутентификацию (NOPCOMMERCE.AUTH) и Anti-Forgery
  * токен из формы /register. После успешного register/login сервер отвечает
- * 302 редиректом — мы отключаем автоследование, чтобы получить чистый статус.
+ * 302 редиректом - мы отключаем автоследование, чтобы получить чистый статус.
  */
 import { expect } from '@playwright/test';
 import { allure } from 'allure-playwright';
@@ -47,7 +47,7 @@ export class AuthService {
   async login({ email, password, rememberMe = false }) {
     return await allure.step(`API · Login ${email}`, async () => {
       // На demowebshop форма /login не содержит __RequestVerificationToken,
-      // поэтому запрашиваем его опционально — реальная проверка идёт по cookie.
+      // поэтому запрашиваем его опционально - реальная проверка идёт по cookie.
       const token = await this.api.getAntiForgeryToken('/login', { optional: true });
       const form = {
         Email: email,
@@ -95,7 +95,7 @@ export class AuthService {
   }
 
   /**
-   * Утверждает, что логин был отвергнут — сервер вернул 200 со страницей логина
+   * Утверждает, что логин был отвергнут - сервер вернул 200 со страницей логина
    * и сообщением об ошибке.
    * @param {import('@playwright/test').APIResponse} res
    */

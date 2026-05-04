@@ -16,7 +16,7 @@ export class BasePage {
     this.page = page;
     this.path = path;
 
-    // Header / shell — selectors that exist on every page of the shop.
+    // Header / shell - selectors that exist on every page of the shop.
     this.header = page.locator('.header');
     this.searchInput = page.locator('#small-searchterms');
     this.searchButton = page.locator('input.search-box-button');
@@ -50,7 +50,7 @@ export class BasePage {
     await expect(this.page).toHaveURL(new RegExp(this.path.replace('/', '\\/') + '$'));
   }
 
-  /** Header search — used as a smoke check in multiple specs. */
+  /** Header search - used as a smoke check in multiple specs. */
   async search(query) {
     await allure.step(`Search for "${query}"`, async () => {
       await this.searchInput.fill(query);

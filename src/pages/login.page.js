@@ -12,8 +12,8 @@ export class LoginPage extends BasePage {
     this.rememberMe = page.locator('#RememberMe');
     this.submitBtn = page.locator('input.login-button');
     // На demowebshop ошибки логина рендерятся как
-    //   <div class="message-error"><div class="validation-summary-errors">…</div></div>
-    // Это два разных элемента, поэтому используем пробел (descendant) — иначе
+    //   <div class="message-error"><div class="validation-summary-errors">...</div></div>
+    // Это два разных элемента, поэтому используем пробел (descendant) - иначе
     // пустой блок `.message-error` без вложенной ошибки тоже бы матчился.
     this.summaryError = page.locator('.message-error .validation-summary-errors');
   }

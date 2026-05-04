@@ -1,6 +1,6 @@
 // @ts-check
 /**
- * NewsletterService — подписка на рассылку demowebshop.
+ * NewsletterService - подписка на рассылку demowebshop.
  *
  * Эндпоинт `/subscribenewsletter` принимает поле `email` и возвращает JSON
  * `{ Success: bool, Result: string }` (поля начинаются с заглавной буквы).

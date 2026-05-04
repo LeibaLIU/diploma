@@ -19,7 +19,7 @@ test.describe('API · Newsletter @API @NEWSLETTER', () => {
   test('Rejects clearly invalid email', async ({ newsletterApi }) => {
     await allure.epic('Demo Web Shop');
     await allure.feature('API · Newsletter');
-    await allure.story('Subscribe — negative');
+    await allure.story('Subscribe - negative');
     await allure.severity('minor');
 
     const result = await newsletterApi.subscribe('not-an-email');

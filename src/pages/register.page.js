@@ -17,7 +17,7 @@ export class RegisterPage extends BasePage {
     this.submitBtn = page.locator('#register-button');
 
     this.successMessage = page.locator('.result');
-    // На странице /registerresult/1 кнопка Continue — это <input type="button">,
+    // На странице /registerresult/1 кнопка Continue - это <input type="button">,
     // а не <a>. Используем универсальный селектор по классу.
     this.continueBtn = page.locator('.register-continue-button');
     this.fieldErrors = page.locator('.field-validation-error');
