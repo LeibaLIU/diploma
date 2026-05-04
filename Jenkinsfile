@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent { label 'jdk21-jenkins-agent' }
 
     parameters {
         choice(
@@ -14,7 +14,7 @@ pipeline {
         )
         string(
             name: 'ALLURE_PROJECT_ID',
-            defaultValue: '',
+            defaultValue: '5182',
             description: 'ID проекта в Allure TestOps (если пусто — отчёт в TestOps не загружается)'
         )
     }
@@ -25,7 +25,7 @@ pipeline {
         ALLURE_RESULTS  = 'allure-results'
         // Лейблы запуска для красивого отображения в TestOps.
         ALLURE_LAUNCH_NAME = "diploma · ${params.TESTS} · #${BUILD_NUMBER}"
-        ALLURE_LAUNCH_TAGS = "branch:${env.BRANCH_NAME ?: 'manual'},build:${BUILD_NUMBER}"
+        ALLURE_LAUNCH_TAGS = "ci:jenkins,build:${BUILD_NUMBER}"
     }
 
     options {
@@ -36,17 +36,35 @@ pipeline {
     }
 
     stages {
-        stage('Checkout') {
+        stage('Install Node.js') {
             steps {
-                checkout scm
+                sh '''
+                    set -e
+                    if ! command -v node >/dev/null 2>&1 || [ "$(node -v | sed 's/v\\([0-9]*\\).*/\\1/')" -lt 20 ]; then
+                        echo "Installing Node.js 20 via nvm..."
+                        export NVM_DIR="$HOME/.nvm"
+                        if [ ! -s "$NVM_DIR/nvm.sh" ]; then
+                            curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+                        fi
+                        . "$NVM_DIR/nvm.sh"
+                        nvm install 20
+                        nvm use 20
+                        ln -sf "$(which node)" /tmp/node
+                        ln -sf "$(which npm)"  /tmp/npm
+                        ln -sf "$(which npx)"  /tmp/npx
+                    fi
+                    node -v
+                    npm -v
+                '''
             }
         }
 
         stage('Install dependencies') {
             steps {
                 sh '''
-                    node -v
-                    npm -v
+                    set -e
+                    export NVM_DIR="$HOME/.nvm"
+                    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" && nvm use 20 || true
                     npm ci || npm install
                     npx playwright install --with-deps chromium
                 '''
@@ -67,6 +85,9 @@ pipeline {
                     // Не падаем сразу — даём возможность опубликовать отчёт.
                     catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
                         sh """
+                            set -e
+                            export NVM_DIR="\$HOME/.nvm"
+                            [ -s "\$NVM_DIR/nvm.sh" ] && . "\$NVM_DIR/nvm.sh" && nvm use 20 || true
                             export CI=true
                             export BASE_URL='${params.BASE_URL}'
                             ${cmd}
@@ -80,9 +101,10 @@ pipeline {
             when { expression { return params.ALLURE_PROJECT_ID?.trim() } }
             steps {
                 withCredentials([
-                    string(credentialsId: 'allure-testops-token', variable: 'ALLURE_TOKEN')
+                    string(credentialsId: 'ALLURE_TOKEN', variable: 'ALLURE_TOKEN')
                 ]) {
                     sh '''
+                        set -e
                         if ! command -v allurectl >/dev/null 2>&1; then
                             curl -sSL https://github.com/allure-framework/allurectl/releases/latest/download/allurectl_linux_amd64 \
                                 -o /tmp/allurectl
@@ -91,12 +113,12 @@ pipeline {
                         fi
 
                         allurectl upload \
-                            --endpoint "$ALLURE_ENDPOINT" \
-                            --token    "$ALLURE_TOKEN" \
+                            --endpoint   "$ALLURE_ENDPOINT" \
+                            --token      "$ALLURE_TOKEN" \
                             --project-id "''' + params.ALLURE_PROJECT_ID + '''" \
                             --launch-name "$ALLURE_LAUNCH_NAME" \
                             --launch-tags "$ALLURE_LAUNCH_TAGS" \
-                            "$ALLURE_RESULTS"
+                            "$ALLURE_RESULTS" || echo "TestOps upload skipped"
                     '''
                 }
             }
