@@ -1,11 +1,9 @@
 // @ts-check
 import { allure } from 'allure-playwright';
-import { test, expect } from '@playwright/test';
-import { HomePage } from '../../src/pages/home.page.js';
-import { SearchPage } from '../../src/pages/search.page.js';
+import { test, expect } from '../../src/helpers/fixtures/ui.fixture.js';
 
 test.describe('Mobile · Search @MOBILE @SEARCH @SMOKE', () => {
-  test('Mobile user can search a product from the home page', async ({ page }) => {
+  test('Mobile user can search a product from the home page', async ({ app }) => {
     await allure.epic('Demo Web Shop');
     await allure.feature('Mobile experience');
     await allure.story('Search on mobile (Pixel 5)');
@@ -13,22 +11,19 @@ test.describe('Mobile · Search @MOBILE @SEARCH @SMOKE', () => {
     await allure.owner('QA.GURU diploma');
     await allure.tag('mobile');
 
-    const home = new HomePage(page);
-    const search = new SearchPage(page);
+    await app.home.open();
+    await app.home.attachScreenshot('mobile-home');
+    await app.home.search('book');
 
-    await home.open();
-    await home.attachScreenshot('mobile-home');
-    await home.search('book');
-
-    await expect(search.products.first()).toBeVisible();
-    const titles = await search.productTitles.allInnerTexts();
+    await expect(app.search.products.first()).toBeVisible();
+    const titles = await app.search.productTitles.allInnerTexts();
     const matches = titles.some((t) =>
       t.toLowerCase().includes('book')
     );
     expect(matches, `Expected at least one product title to contain "book"`).toBe(true);
-    await search.attachScreenshot('mobile-search-results');
+    await app.search.attachScreenshot('mobile-search-results');
 
-    const viewport = page.viewportSize();
+    const viewport = app.page.viewportSize();
     expect(viewport?.width).toBeLessThanOrEqual(480);
   });
 });

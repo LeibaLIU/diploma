@@ -4,11 +4,7 @@ import { test, expect } from '../../src/helpers/fixtures/ui.fixture.js';
 import { newUser } from '../../src/helpers/builders/user.builder.js';
 
 test.describe('UI · Login @UI @AUTH', () => {
-  test('Logs in successfully with newly registered user @SMOKE', async ({
-    registerPage,
-    loginPage,
-    homePage,
-  }) => {
+  test('Logs in successfully with newly registered user @SMOKE', async ({ app }) => {
     await allure.epic('Demo Web Shop');
     await allure.feature('Authentication');
     await allure.story('Login');
@@ -18,31 +14,31 @@ test.describe('UI · Login @UI @AUTH', () => {
 
     const user = newUser();
 
-    await registerPage.open();
-    await registerPage.register(user);
-    await expect(registerPage.successMessage).toHaveText('Your registration completed');
-    await expect(registerPage.continueBtn).toBeVisible();
-    await registerPage.attachScreenshot('Registration result');
+    await app.register.open();
+    await app.register.register(user);
+    await expect(app.register.successMessage).toHaveText('Your registration completed');
+    await expect(app.register.continueBtn).toBeVisible();
+    await app.register.attachScreenshot('Registration result');
 
-    await homePage.logoutLink.click();
+    await app.home.logoutLink.click();
 
-    await loginPage.open();
-    await loginPage.login(user.email, user.password);
+    await app.login.open();
+    await app.login.login(user.email, user.password);
 
-    await expect(loginPage.accountLink).toHaveText(user.email);
-    await expect(loginPage.logoutLink).toBeVisible();
+    await expect(app.login.accountLink).toHaveText(user.email);
+    await expect(app.login.logoutLink).toBeVisible();
   });
 
-  test('Shows error for invalid credentials', async ({ loginPage }) => {
+  test('Shows error for invalid credentials', async ({ app }) => {
     await allure.epic('Demo Web Shop');
     await allure.feature('Authentication');
     await allure.story('Login - negative');
     await allure.severity('normal');
     await allure.owner('QA.GURU diploma');
 
-    await loginPage.open();
-    await loginPage.login('not-a-real-user@example.com', 'WrongPass123!');
-    await expect(loginPage.summaryError).toBeVisible();
-    await loginPage.attachScreenshot('Login error');
+    await app.login.open();
+    await app.login.login('not-a-real-user@example.com', 'WrongPass123!');
+    await expect(app.login.summaryError).toBeVisible();
+    await app.login.attachScreenshot('Login error');
   });
 });

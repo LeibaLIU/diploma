@@ -4,7 +4,7 @@ import { faker } from '@faker-js/faker';
 import { test, expect } from '../../src/helpers/fixtures/ui.fixture.js';
 
 test.describe('UI · Newsletter @UI @NEWSLETTER', () => {
-  test('Subscribes to the newsletter with a random email', async ({ homePage }) => {
+  test('Subscribes to the newsletter with a random email', async ({ app }) => {
     await allure.epic('Demo Web Shop');
     await allure.feature('Communications');
     await allure.story('Newsletter subscription');
@@ -15,9 +15,9 @@ test.describe('UI · Newsletter @UI @NEWSLETTER', () => {
       .email({ provider: 'demo-tricentis-test.io' })
       .toLowerCase();
 
-    await homePage.open();
-    await homePage.subscribeToNewsletter(email);
-    await expect(homePage.newsletterResult).toContainText('Thank you for signing up', { timeout: 10_000 });
-    await homePage.attachScreenshot('Newsletter success');
+    await app.home.open();
+    await app.home.subscribeToNewsletter(email);
+    await expect(app.home.newsletterResult).toContainText('Thank you for signing up', { timeout: 10_000 });
+    await app.home.attachScreenshot('Newsletter success');
   });
 });

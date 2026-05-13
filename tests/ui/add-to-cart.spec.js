@@ -1,10 +1,9 @@
 // @ts-check
 import { allure } from 'allure-playwright';
 import { test, expect } from '../../src/helpers/fixtures/ui.fixture.js';
-import { ProductPage } from '../../src/pages/product.page.js';
 
 test.describe('UI · Cart @UI @CART @SMOKE', () => {
-  test('Adds a product to the cart and verifies cart contents', async ({ page, cartPage }) => {
+  test('Adds a product to the cart and verifies cart contents', async ({ app }) => {
     await allure.epic('Demo Web Shop');
     await allure.feature('Cart');
     await allure.story('Add to cart');
@@ -12,8 +11,7 @@ test.describe('UI · Cart @UI @CART @SMOKE', () => {
     await allure.owner('QA.GURU diploma');
     await allure.tag('regression');
 
-    const slug = '141-inch-laptop';
-    const product = new ProductPage(page, slug);
+    const product = app.product('141-inch-laptop');
 
     await product.open();
     const productTitle = await product.getTitle();
@@ -22,14 +20,14 @@ test.describe('UI · Cart @UI @CART @SMOKE', () => {
     await expect(product.barNotification).toContainText('The product has been added to your', { timeout: 10_000 });
     await expect(product.cartQty).toHaveText('(1)');
 
-    await cartPage.open();
-    await expect(cartPage.productNames.first()).toBeVisible();
-    const names = await cartPage.productNames.allInnerTexts();
+    await app.cart.open();
+    await expect(app.cart.productNames.first()).toBeVisible();
+    const names = await app.cart.productNames.allInnerTexts();
     const found = names.some((n) =>
       n.toLowerCase().includes(productTitle.toLowerCase())
     );
     expect(found, `Cart should contain "${productTitle}"`).toBe(true);
-    await cartPage.attachScreenshot('Cart contents');
-    await expect(cartPage.rows).toHaveCount(1);
+    await app.cart.attachScreenshot('Cart contents');
+    await expect(app.cart.rows).toHaveCount(1);
   });
 });
