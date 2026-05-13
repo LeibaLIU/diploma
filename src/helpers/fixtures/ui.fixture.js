@@ -15,7 +15,7 @@ import { CartPage } from '../../pages/cart.page.js';
  * @example
  *   test('home loads', async ({ homePage }) => {
  *     await homePage.open();
- *     await homePage.expectFeaturedProductsVisible();
+ *     await expect(homePage.featuredProducts.first()).toBeVisible();
  *   });
  */
 export const test = base.extend({

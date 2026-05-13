@@ -1,5 +1,5 @@
 // @ts-check
-import { apiTest as test } from '../../src/helpers/fixtures/api.fixture.js';
+import { apiTest as test, expect } from '../../src/helpers/fixtures/api.fixture.js';
 import { faker } from '@faker-js/faker';
 import { allure } from 'allure-playwright';
 
@@ -13,7 +13,9 @@ test.describe('API · Newsletter @API @NEWSLETTER', () => {
     const email = faker.internet.email().toLowerCase();
     const result = await newsletterApi.subscribe(email);
 
-    await newsletterApi.expectSubscribed(result);
+    expect(result.status).toBe(200);
+    expect(result.body.Success, 'Success flag').toBe(true);
+    expect(result.body.Result).toContain('Thank you for signing up');
   });
 
   test('Rejects clearly invalid email', async ({ newsletterApi }) => {
@@ -24,6 +26,7 @@ test.describe('API · Newsletter @API @NEWSLETTER', () => {
 
     const result = await newsletterApi.subscribe('not-an-email');
 
-    await newsletterApi.expectInvalidEmail(result);
+    expect(result.body.Success, 'Success flag').toBe(false);
+    expect(result.body.Result).toMatch(/Enter valid email/i);
   });
 });

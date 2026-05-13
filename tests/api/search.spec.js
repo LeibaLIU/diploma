@@ -1,5 +1,5 @@
 // @ts-check
-import { apiTest as test } from '../../src/helpers/fixtures/api.fixture.js';
+import { apiTest as test, expect } from '../../src/helpers/fixtures/api.fixture.js';
 import { allure } from 'allure-playwright';
 
 test('API · Search @API @SEARCH › returns at least one product for "book"', async ({ searchApi }) => {
@@ -10,5 +10,6 @@ test('API · Search @API @SEARCH › returns at least one product for "book"', a
 
   const result = await searchApi.search('book');
 
-  await searchApi.expectAtLeastOneProduct(result);
+  expect(result.status).toBe(200);
+  expect(result.productCount, 'product-item count').toBeGreaterThan(0);
 });

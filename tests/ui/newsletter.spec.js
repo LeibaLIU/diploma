@@ -1,7 +1,7 @@
 // @ts-check
 import { allure } from 'allure-playwright';
 import { faker } from '@faker-js/faker';
-import { test } from '../../src/helpers/fixtures/ui.fixture.js';
+import { test, expect } from '../../src/helpers/fixtures/ui.fixture.js';
 
 test.describe('UI · Newsletter @UI @NEWSLETTER', () => {
   test('Subscribes to the newsletter with a random email', async ({ homePage }) => {
@@ -17,6 +17,7 @@ test.describe('UI · Newsletter @UI @NEWSLETTER', () => {
 
     await homePage.open();
     await homePage.subscribeToNewsletter(email);
-    await homePage.expectSubscribeSuccess();
+    await expect(homePage.newsletterResult).toContainText('Thank you for signing up', { timeout: 10_000 });
+    await homePage.attachScreenshot('Newsletter success');
   });
 });

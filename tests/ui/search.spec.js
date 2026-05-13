@@ -1,6 +1,6 @@
 // @ts-check
 import { allure } from 'allure-playwright';
-import { test } from '../../src/helpers/fixtures/ui.fixture.js';
+import { test, expect } from '../../src/helpers/fixtures/ui.fixture.js';
 
 test.describe('UI · Search @UI @SEARCH', () => {
   test('Header search returns relevant products for "book"', async ({ homePage, searchPage }) => {
@@ -13,7 +13,15 @@ test.describe('UI · Search @UI @SEARCH', () => {
     await homePage.open();
     await homePage.search('book');
 
-    await searchPage.expectAtLeastOneResult();
-    await searchPage.expectResultsContain('book');
+    await expect(searchPage.products.first()).toBeVisible();
+    const count = await searchPage.products.count();
+    expect(count, 'Expected at least one search result').toBeGreaterThan(0);
+
+    const titles = await searchPage.productTitles.allInnerTexts();
+    const matches = titles.some((t) =>
+      t.toLowerCase().includes('book')
+    );
+    expect(matches, `Expected at least one product title to contain "book"`).toBe(true);
+    await searchPage.attachScreenshot(`Search results for "book"`);
   });
 });

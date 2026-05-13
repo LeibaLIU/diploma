@@ -1,6 +1,6 @@
 // @ts-check
 import { allure } from 'allure-playwright';
-import { test } from '../../src/helpers/fixtures/ui.fixture.js';
+import { test, expect } from '../../src/helpers/fixtures/ui.fixture.js';
 import { newUser } from '../../src/helpers/builders/user.builder.js';
 
 test.describe('UI · Registration @UI @AUTH @SMOKE', () => {
@@ -16,6 +16,8 @@ test.describe('UI · Registration @UI @AUTH @SMOKE', () => {
 
     await registerPage.open();
     await registerPage.register(user);
-    await registerPage.expectRegistrationCompleted();
+    await expect(registerPage.successMessage).toHaveText('Your registration completed');
+    await expect(registerPage.continueBtn).toBeVisible();
+    await registerPage.attachScreenshot('Registration result');
   });
 });

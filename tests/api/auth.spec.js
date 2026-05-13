@@ -1,5 +1,5 @@
 // @ts-check
-import { apiTest as test } from '../../src/helpers/fixtures/api.fixture.js';
+import { apiTest as test, expect } from '../../src/helpers/fixtures/api.fixture.js';
 import { newUser } from '../../src/helpers/builders/user.builder.js';
 import { allure } from 'allure-playwright';
 
@@ -14,7 +14,8 @@ test.describe('API · Auth @API @AUTH', () => {
     const user = newUser();
     const res = await authApi.register(user);
 
-    await authApi.expectRegistered(res);
+    expect(res.status(), 'register status').toBe(302);
+    expect(res.headers()['location']).toContain('/registerresult/1');
   });
 
   test('Logs in with previously registered user @SMOKE', async ({ authApi }) => {
@@ -25,14 +26,14 @@ test.describe('API · Auth @API @AUTH', () => {
 
     const user = newUser();
     const reg = await authApi.register(user);
-    await authApi.expectRegistered(reg);
+    expect(reg.status(), 'register status').toBe(302);
+    expect(reg.headers()['location']).toContain('/registerresult/1');
 
-    // После /register сервер уже выдал нам auth-cookie. Чтобы протестировать
-    // именно /login, выйдем и залогинимся заново.
     await authApi.logout();
 
     const login = await authApi.login({ email: user.email, password: user.password });
 
-    await authApi.expectLoggedIn(login);
+    expect(login.status(), 'login status').toBe(302);
+    expect(login.headers()['location']).toBe('/');
   });
 });

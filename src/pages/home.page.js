@@ -1,5 +1,4 @@
 // @ts-check
-import { expect } from '@playwright/test';
 import { allure } from 'allure-playwright';
 import { BasePage } from './base.page.js';
 
@@ -18,20 +17,5 @@ export class HomePage extends BasePage {
       await this.newsletterEmail.fill(email);
       await this.newsletterSubscribeBtn.click();
     });
-  }
-
-  async expectSubscribeSuccess() {
-    await allure.step('Expect newsletter success', async () => {
-      await expect(this.newsletterResult).toContainText(
-        'Thank you for signing up',
-        { timeout: 10_000 }
-      );
-      await this.attachScreenshot('Newsletter success');
-    });
-  }
-
-  async expectFeaturedProductsVisible() {
-    await expect(this.featuredProducts.first()).toBeVisible();
-    expect(await this.featuredProducts.count()).toBeGreaterThan(0);
   }
 }

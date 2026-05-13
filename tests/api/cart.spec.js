@@ -1,8 +1,7 @@
 // @ts-check
-import { apiTest as test } from '../../src/helpers/fixtures/api.fixture.js';
+import { apiTest as test, expect } from '../../src/helpers/fixtures/api.fixture.js';
 import { allure } from 'allure-playwright';
 
-// Идентификатор «14.1-inch Laptop» на demowebshop = 31.
 const LAPTOP_ID = 31;
 
 test('API · Cart @API @CART @SMOKE › Adds a product and gets success message', async ({ cartApi }) => {
@@ -13,5 +12,7 @@ test('API · Cart @API @CART @SMOKE › Adds a product and gets success message'
 
   const result = await cartApi.addToCart(LAPTOP_ID);
 
-  await cartApi.expectAddedSuccessfully(result);
+  expect(result.status).toBe(200);
+  expect(result.body.success, 'success flag').toBe(true);
+  expect(result.body.message).toContain('The product has been added to your');
 });

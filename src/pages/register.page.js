@@ -1,5 +1,4 @@
 // @ts-check
-import { expect } from '@playwright/test';
 import { allure } from 'allure-playwright';
 import { BasePage } from './base.page.js';
 
@@ -17,8 +16,6 @@ export class RegisterPage extends BasePage {
     this.submitBtn = page.locator('#register-button');
 
     this.successMessage = page.locator('.result');
-    // На странице /registerresult/1 кнопка Continue - это <input type="button">,
-    // а не <a>. Используем универсальный селектор по классу.
     this.continueBtn = page.locator('.register-continue-button');
     this.fieldErrors = page.locator('.field-validation-error');
   }
@@ -36,14 +33,6 @@ export class RegisterPage extends BasePage {
       await this.password.fill(user.password);
       await this.confirmPassword.fill(user.password);
       await this.submitBtn.click();
-    });
-  }
-
-  async expectRegistrationCompleted() {
-    await allure.step('Expect registration completed', async () => {
-      await expect(this.successMessage).toHaveText('Your registration completed');
-      await expect(this.continueBtn).toBeVisible();
-      await this.attachScreenshot('Registration result');
     });
   }
 }

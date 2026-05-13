@@ -1,6 +1,6 @@
 // @ts-check
 import { allure } from 'allure-playwright';
-import { test } from '../../src/helpers/fixtures/ui.fixture.js';
+import { test, expect } from '../../src/helpers/fixtures/ui.fixture.js';
 import { ProductPage } from '../../src/pages/product.page.js';
 
 test.describe('UI · Cart @UI @CART @SMOKE', () => {
@@ -19,11 +19,17 @@ test.describe('UI · Cart @UI @CART @SMOKE', () => {
     const productTitle = await product.getTitle();
 
     await product.addToCart();
-    await product.expectAddedNotification();
-    await product.expectCartCount(1);
+    await expect(product.barNotification).toContainText('The product has been added to your', { timeout: 10_000 });
+    await expect(product.cartQty).toHaveText('(1)');
 
     await cartPage.open();
-    await cartPage.expectContains(productTitle);
-    await cartPage.expectRowsCount(1);
+    await expect(cartPage.productNames.first()).toBeVisible();
+    const names = await cartPage.productNames.allInnerTexts();
+    const found = names.some((n) =>
+      n.toLowerCase().includes(productTitle.toLowerCase())
+    );
+    expect(found, `Cart should contain "${productTitle}"`).toBe(true);
+    await cartPage.attachScreenshot('Cart contents');
+    await expect(cartPage.rows).toHaveCount(1);
   });
 });
