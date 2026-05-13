@@ -1,6 +1,7 @@
 // @ts-check
 import { allure } from 'allure-playwright';
 import { test, expect } from '../../src/helpers/fixtures/ui.fixture.js';
+import { PRODUCTS } from '../../src/helpers/data/products.js';
 
 test.describe('UI · Cart @UI @CART @SMOKE', () => {
   test('Adds a product to the cart and verifies cart contents', async ({ app }) => {
@@ -11,7 +12,7 @@ test.describe('UI · Cart @UI @CART @SMOKE', () => {
     await allure.owner('QA.GURU diploma');
     await allure.tag('regression');
 
-    const product = app.product('141-inch-laptop');
+    const product = app.product(PRODUCTS.laptop.slug);
 
     await product.open();
     const productTitle = await product.getTitle();
