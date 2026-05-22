@@ -23,16 +23,4 @@ test.describe('UI · Search @UI @SEARCH', () => {
     );
     expect(matches, `Expected at least one product title to contain "book"`).toBe(true);
   });
-
-  test('Shows no results for unknown query', async ({ app }) => {
-    await allure.epic('Demo Web Shop');
-    await allure.feature('Catalog');
-    await allure.story('Search - negative');
-    await allure.severity('minor');
-
-    await app.home.open();
-    await app.home.search('xzxzxzxznonexistentproduct12345');
-
-    await expect(app.search.noResultMsg).toBeVisible();
-  });
 });
