@@ -2,7 +2,7 @@
 /**
  * ApiService - низкоуровневая обёртка над Playwright APIRequestContext.
  * Предоставляет:
- *   - единый baseURL и куки между запросами;
+ *   - единый контекст и куки между запросами (baseURL задаётся в конфиге);
  *   - извлечение `__RequestVerificationToken` из любой формы NopCommerce;
  *   - короткие хелперы get/post/postForm с автоматическим Allure-attachment ответа.
  *
@@ -14,11 +14,9 @@ import { allure } from 'allure-playwright';
 export class ApiService {
   /**
    * @param {import('@playwright/test').APIRequestContext} request
-   * @param {string} [baseURL]
    */
-  constructor(request, baseURL = process.env.BASE_URL || 'https://demowebshop.tricentis.com') {
+  constructor(request) {
     this.request = request;
-    this.baseURL = baseURL.replace(/\/$/, '');
   }
 
   /**
@@ -31,7 +29,7 @@ export class ApiService {
    */
   async getAntiForgeryToken(path, options = {}) {
     return await allure.step(`Get __RequestVerificationToken from ${path}`, async () => {
-      const res = await this.request.get(`${this.baseURL}${path}`);
+      const res = await this.request.get(path);
       const html = await res.text();
       const match = html.match(
         /name="__RequestVerificationToken"[^>]*value="([^"]+)"/
@@ -53,9 +51,8 @@ export class ApiService {
    * @param {import('@playwright/test').APIRequestOptions} [options]
    */
   async get(path, options) {
-    const url = `${this.baseURL}${path}`;
     return await allure.step(`GET ${path}`, async () => {
-      const res = await this.request.get(url, options);
+      const res = await this.request.get(path, options);
       await this.#attachResponse(res);
       return res;
     });
@@ -69,9 +66,8 @@ export class ApiService {
    * @param {import('@playwright/test').APIRequestOptions} [options]
    */
   async postForm(path, form, options = {}) {
-    const url = `${this.baseURL}${path}`;
     return await allure.step(`POST ${path}`, async () => {
-      const res = await this.request.post(url, {
+      const res = await this.request.post(path, {
         ...options,
         form,
         headers: {

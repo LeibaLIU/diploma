@@ -32,6 +32,15 @@ export class UserBuilder {
   build() {
     return { ...this.user };
   }
+
+  /**
+   * Generate a random email for newsletter / generic usage.
+   * @param {string} [domain='demo-tricentis-test.io']
+   * @returns {string}
+   */
+  static generateEmail(domain = 'demo-tricentis-test.io') {
+    return faker.internet.email({ provider: domain }).toLowerCase();
+  }
 }
 
 /**

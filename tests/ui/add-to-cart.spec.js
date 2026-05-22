@@ -28,7 +28,6 @@ test.describe('UI · Cart @UI @CART @SMOKE', () => {
       n.toLowerCase().includes(productTitle.toLowerCase())
     );
     expect(found, `Cart should contain "${productTitle}"`).toBe(true);
-    await app.cart.attachScreenshot('Cart contents');
     await expect(app.cart.rows).toHaveCount(1);
   });
 });

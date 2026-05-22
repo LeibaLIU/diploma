@@ -26,11 +26,6 @@ export class BasePage {
     });
   }
 
-  async attachScreenshot(name) {
-    const png = await this.page.screenshot({ fullPage: false });
-    await allure.attachment(name, png, 'image/png');
-  }
-
   async search(query) {
     await allure.step(`Search for "${query}"`, async () => {
       await this.searchInput.fill(query);

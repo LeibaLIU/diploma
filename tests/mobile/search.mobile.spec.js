@@ -12,7 +12,6 @@ test.describe('Mobile · Search @MOBILE @SEARCH @SMOKE', () => {
     await allure.tag('mobile');
 
     await app.home.open();
-    await app.home.attachScreenshot('mobile-home');
     await app.home.search('book');
 
     await expect(app.search.products.first()).toBeVisible();
@@ -21,7 +20,6 @@ test.describe('Mobile · Search @MOBILE @SEARCH @SMOKE', () => {
       t.toLowerCase().includes('book')
     );
     expect(matches, `Expected at least one product title to contain "book"`).toBe(true);
-    await app.search.attachScreenshot('mobile-search-results');
 
     const viewport = app.page.viewportSize();
     expect(viewport?.width).toBeLessThanOrEqual(480);

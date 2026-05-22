@@ -1,10 +1,10 @@
 // @ts-check
-import { HomePage } from '../pages/home.page.js';
-import { RegisterPage } from '../pages/register.page.js';
-import { LoginPage } from '../pages/login.page.js';
-import { SearchPage } from '../pages/search.page.js';
-import { ProductPage } from '../pages/product.page.js';
-import { CartPage } from '../pages/cart.page.js';
+import { HomePage } from './home.page.js';
+import { RegisterPage } from './register.page.js';
+import { LoginPage } from './login.page.js';
+import { SearchPage } from './search.page.js';
+import { ProductPage } from './product.page.js';
+import { CartPage } from './cart.page.js';
 
 export class App {
   /** @param {import('@playwright/test').Page} page */
