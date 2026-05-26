@@ -35,13 +35,3 @@ export class UserBuilder {
   }
 }
 
-/**
- * Convenience helper. Returns a fresh randomized user payload
- * using the Builder chain internally.
- */
-export const newUser = () => new UserBuilder()
-  .addEmail()
-  .addFirstName()
-  .addLastName()
-  .addPassword()
-  .generate();

@@ -26,6 +26,7 @@ test.describe('API · Newsletter @API @NEWSLETTER', () => {
 
     const result = await api.newsletter.subscribe('not-an-email');
 
+    expect(result.status).toBe(200);
     expect(result.body.Success, 'Success flag').toBe(false);
     expect(result.body.Result).toMatch(/Enter valid email/i);
   });

@@ -9,8 +9,8 @@
  * автоматически сохраняются между шагами одного теста.
  */
 import { test as base, expect } from '@playwright/test';
-import { ApiService } from '../../services/api.service.js';
-import { ApiFacade } from '../../services/api.facade.js';
+import { ApiService } from '../../services/index.js';
+import { ApiFacade } from '../../services/index.js';
 
 export const apiTest = base.extend({
   api: async ({ playwright, baseURL }, use) => {

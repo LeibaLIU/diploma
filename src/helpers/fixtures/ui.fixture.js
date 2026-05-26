@@ -1,6 +1,6 @@
 // @ts-check
 import { test as base } from '@playwright/test';
-import { App } from '../../pages/app.js';
+import { App } from '../../pages/index.js';
 import { UserBuilder } from '../builders/index.js';
 
 export const test = base.extend({

@@ -9,5 +9,6 @@ export class CartPage extends BasePage {
     this.productNames = page.locator('.product-name');
     this.emptyCartMsg = page.locator('.order-summary-content');
     this.totalSummary = page.locator('.cart-total');
+    this.prices = page.locator('.product-unit-price, .product-subtotal, .product-price');
   }
 }

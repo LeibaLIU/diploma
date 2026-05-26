@@ -24,4 +24,21 @@ test.describe('UI · Registration @UI @AUTH @SMOKE', () => {
     await expect(app.register.successMessage).toHaveText('Your registration completed');
     await expect(app.register.continueBtn).toBeVisible();
   });
+
+  test('Shows error when registering with an already existing email', async ({ app, registeredUser }) => {
+    await allure.epic('Demo Web Shop');
+    await allure.feature('Authentication');
+    await allure.story('Registration - negative');
+    await allure.severity('normal');
+
+    await app.register.open();
+    await app.register.register({
+      email: registeredUser.email,
+      firstName: 'Another',
+      lastName: 'User',
+      password: registeredUser.password,
+    });
+
+    await expect(app.register.validationSummary).toContainText('already exists');
+  });
 });

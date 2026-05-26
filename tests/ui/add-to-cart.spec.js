@@ -16,6 +16,7 @@ test.describe('UI · Cart @UI @CART @SMOKE', () => {
 
     await product.open();
     const productTitle = await product.getTitle();
+    const productPrice = await product.price.first().innerText();
 
     await product.addToCart();
     await expect(product.barNotification).toContainText('The product has been added to your', { timeout: 10_000 });
@@ -28,6 +29,7 @@ test.describe('UI · Cart @UI @CART @SMOKE', () => {
       n.toLowerCase().includes(productTitle.toLowerCase())
     );
     expect(found, `Cart should contain "${productTitle}"`).toBe(true);
+    await expect(app.cart.prices.first()).toContainText(productPrice.replace(/[^0-9.,]/g, '').trim());
     await expect(app.cart.rows).toHaveCount(1);
   });
 });

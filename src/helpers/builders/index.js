@@ -1,1 +1,1 @@
-export { UserBuilder, newUser } from './user.builder.js';
+export { UserBuilder } from './user.builder.js';

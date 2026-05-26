@@ -18,6 +18,7 @@ export class RegisterPage extends BasePage {
     this.successMessage = page.locator('.result');
     this.continueBtn = page.locator('.register-continue-button');
     this.fieldErrors = page.locator('.field-validation-error');
+    this.validationSummary = page.locator('.validation-summary-errors');
   }
 
   /**
