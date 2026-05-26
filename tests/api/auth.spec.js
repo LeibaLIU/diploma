@@ -1,6 +1,6 @@
 // @ts-check
 import { apiTest as test, expect } from '../../src/helpers/fixtures/api.fixture.js';
-import { newUser } from '../../src/helpers/builders/index.js';
+import { UserBuilder } from '../../src/helpers/builders/index.js';
 import { allure } from 'allure-playwright';
 
 test.describe('API · Auth @API @AUTH', () => {
@@ -11,7 +11,13 @@ test.describe('API · Auth @API @AUTH', () => {
     await allure.severity('blocker');
     await allure.tag('regression');
 
-    const user = newUser();
+    const user = new UserBuilder()
+      .addEmail()
+      .addFirstName()
+      .addLastName()
+      .addPassword()
+      .generate();
+
     const res = await api.auth.register(user);
 
     expect(res.status(), 'register status').toBe(302);
@@ -24,7 +30,13 @@ test.describe('API · Auth @API @AUTH', () => {
     await allure.story('Login');
     await allure.severity('blocker');
 
-    const user = newUser();
+    const user = new UserBuilder()
+      .addEmail()
+      .addFirstName()
+      .addLastName()
+      .addPassword()
+      .generate();
+
     const reg = await api.auth.register(user);
     expect(reg.status(), 'register status').toBe(302);
     expect(reg.headers()['location']).toContain('/registerresult/1');

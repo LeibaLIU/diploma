@@ -10,7 +10,7 @@ test.describe('API · Newsletter @API @NEWSLETTER', () => {
     await allure.story('Subscribe');
     await allure.severity('normal');
 
-    const email = UserBuilder.generateEmail();
+    const { email } = new UserBuilder().addEmail().generate();
     const result = await api.newsletter.subscribe(email);
 
     expect(result.status).toBe(200);

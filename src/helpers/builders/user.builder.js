@@ -3,47 +3,45 @@ import { faker } from '@faker-js/faker';
 
 /**
  * Fluent builder for User test data based on @faker-js/faker.
+ * Data is generated inside add*() methods, not in constructor.
  *
  * @example
- *   const user = new UserBuilder().withEmailDomain('example.com').build();
+ *   const user = new UserBuilder()
+ *     .addEmail()
+ *     .addFirstName()
+ *     .addLastName()
+ *     .addPassword()
+ *     .generate();
  */
 export class UserBuilder {
   constructor() {
-    this.user = {
-      gender: faker.helpers.arrayElement(['male', 'female']),
-      firstName: faker.person.firstName(),
-      lastName: faker.person.lastName(),
-      email: faker.internet.email({ provider: 'demo-tricentis-test.io' }).toLowerCase(),
-      password: `Aa1!${faker.internet.password({ length: 10 })}`,
-    };
+    this._user = {};
   }
 
-  withFirstName(value) { this.user.firstName = value; return this; }
-  withLastName(value)  { this.user.lastName  = value; return this; }
-  withEmail(value)     { this.user.email     = value.toLowerCase(); return this; }
-  withEmailDomain(domain) {
-    const local = faker.internet.username().toLowerCase().replace(/[^a-z0-9.]/g, '');
-    this.user.email = `${local}.${Date.now()}@${domain}`;
+  addGender() { this._user.gender = faker.helpers.arrayElement(['male', 'female']); return this; }
+  addFirstName() { this._user.firstName = faker.person.firstName(); return this; }
+  addLastName() { this._user.lastName = faker.person.lastName(); return this; }
+  addEmail(domain = 'demo-tricentis-test.io') {
+    this._user.email = faker.internet.email({ provider: domain }).toLowerCase();
     return this;
   }
-  withPassword(value)  { this.user.password  = value; return this; }
-  withGender(value)    { this.user.gender    = value; return this; }
-
-  build() {
-    return { ...this.user };
+  addPassword() {
+    this._user.password = `Aa1!${faker.internet.password({ length: 10 })}`;
+    return this;
   }
 
-  /**
-   * Generate a random email for newsletter / generic usage.
-   * @param {string} [domain='demo-tricentis-test.io']
-   * @returns {string}
-   */
-  static generateEmail(domain = 'demo-tricentis-test.io') {
-    return faker.internet.email({ provider: domain }).toLowerCase();
+  generate() {
+    return { ...this._user };
   }
 }
 
 /**
- * Convenience helper. Returns a fresh randomized user payload.
+ * Convenience helper. Returns a fresh randomized user payload
+ * using the Builder chain internally.
  */
-export const newUser = () => new UserBuilder().build();
+export const newUser = () => new UserBuilder()
+  .addEmail()
+  .addFirstName()
+  .addLastName()
+  .addPassword()
+  .generate();

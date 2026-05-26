@@ -11,7 +11,7 @@ test.describe('UI · Newsletter @UI @NEWSLETTER', () => {
     await allure.severity('normal');
     await allure.owner('QA.GURU diploma');
 
-    const email = UserBuilder.generateEmail();
+    const { email } = new UserBuilder().addEmail().generate();
 
     await app.home.open();
     await app.home.subscribeToNewsletter(email);

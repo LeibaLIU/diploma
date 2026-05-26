@@ -1,7 +1,7 @@
 // @ts-check
 import { test as base } from '@playwright/test';
 import { App } from '../../pages/app.js';
-import { newUser } from '../builders/index.js';
+import { UserBuilder } from '../builders/index.js';
 
 export const test = base.extend({
   app: async ({ page }, use) => {
@@ -9,7 +9,13 @@ export const test = base.extend({
   },
 
   registeredUser: async ({ app }, use) => {
-    const user = newUser();
+    const user = new UserBuilder()
+      .addEmail()
+      .addFirstName()
+      .addLastName()
+      .addPassword()
+      .generate();
+
     await app.register.open();
     await app.register.register(user);
     await app.home.logoutLink.click();

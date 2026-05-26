@@ -1,7 +1,7 @@
 // @ts-check
 import { allure } from 'allure-playwright';
 import { test, expect } from '../../src/helpers/fixtures/ui.fixture.js';
-import { newUser } from '../../src/helpers/builders/index.js';
+import { UserBuilder } from '../../src/helpers/builders/index.js';
 
 test.describe('UI · Registration @UI @AUTH @SMOKE', () => {
   test('Successfully registers a brand-new user with random data', async ({ app }) => {
@@ -12,7 +12,12 @@ test.describe('UI · Registration @UI @AUTH @SMOKE', () => {
     await allure.owner('QA.GURU diploma');
     await allure.tag('regression');
 
-    const user = newUser();
+    const user = new UserBuilder()
+      .addEmail()
+      .addFirstName()
+      .addLastName()
+      .addPassword()
+      .generate();
 
     await app.register.open();
     await app.register.register(user);
